@@ -1,9 +1,7 @@
 package ua.training;
 
 import java.util.LinkedList;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 public class Main implements NUMBER_CONSTANTS {
 
@@ -25,13 +23,22 @@ public class Main implements NUMBER_CONSTANTS {
         GeneralInstitute generalInstitute = new GeneralInstitute(queue,random);
         BiologicalInstitute biologicalInstitute = new BiologicalInstitute(new LinkedList<>(),queue);
         MathematicalInstitute mathematicalInstitute = new MathematicalInstitute(queue);
-        Thread t1 = new Thread(documentCollector);
-        Thread t2 = new Thread(generalInstitute);
-        Thread t3 = new Thread(biologicalInstitute);
-        Thread t4 = new Thread(mathematicalInstitute);
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
+
+        ExecutorService service = Executors.newFixedThreadPool(4);
+        service.execute(documentCollector);
+        service.execute(generalInstitute);
+        service.execute(biologicalInstitute);
+        service.execute(mathematicalInstitute);
+
+        service.shutdown();
+//        service.awaitTermination(200, TimeUnit.MILLISECONDS);
+//        Thread t1 = new Thread(documentCollector);
+//        Thread t2 = new Thread(generalInstitute);
+//        Thread t3 = new Thread(biologicalInstitute);
+//        Thread t4 = new Thread(mathematicalInstitute);
+//        t1.start();
+//        t2.start();
+//        t3.start();
+//        t4.start();
     }
 }
